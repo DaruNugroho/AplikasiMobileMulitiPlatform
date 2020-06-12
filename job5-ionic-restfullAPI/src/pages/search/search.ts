@@ -1,0 +1,52 @@
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { ProductProvider } from '../../providers/product/product';
+import { AlertProvider } from '../../providers/alert/alert';
+import { DetailproductPage } from '../detailproduct/detailproduct';
+
+/**
+ * Generated class for the SeacrhPage page.
+ *
+ * See https://ionicframework.com/docs/components/#navigation for more info on
+ * Ionic pages and navigation.
+ */
+
+@Component({
+  selector: 'page-search',
+  templateUrl: 'search.html',
+})
+export class SearchPage {
+  products=[];
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams,
+    private productProvider: ProductProvider,
+    private alertProvider: AlertProvider) {
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad SeacrhPage');
+  }
+
+  search(event){
+    this.products = [];
+    let searchQuery = event.target.value;
+
+    if(searchQuery == ""){
+      this.products = [];
+    }else if(searchQuery.length >= 3){
+      this.productProvider.searchProduct(searchQuery).subscribe(
+          (result: any[]) => {
+            this.products = result;
+          },
+          error => {
+            console.log("errornya: " + error);
+          }
+        )
+      }
+    }
+  
+  openDetail(id:number) {
+    this.navCtrl.push(DetailproductPage,{id:id});
+  }
+  
+}
